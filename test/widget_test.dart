@@ -62,6 +62,28 @@ void main() {
     expect(find.text('up2248415@myport.ac.uk'), findsWidgets);
   });
 
+  testWidgets('Side drawer profile menu opens basic information page',
+      (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    await tester.pumpWidget(const MoodleApp());
+    await tester.tap(find.byIcon(Icons.menu));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Profile'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Student information'), findsOneWidget);
+    expect(find.text('Full name'), findsOneWidget);
+    expect(find.text('Student number'), findsOneWidget);
+    expect(find.text('Email address'), findsOneWidget);
+  });
+
   testWidgets('Dashboard renders correctly on a mobile viewport',
       (WidgetTester tester) async {
     tester.view.physicalSize = const Size(390, 844);
