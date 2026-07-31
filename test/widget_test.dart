@@ -23,12 +23,35 @@ void main() {
     await tester.tap(find.byIcon(Icons.menu));
     await tester.pumpAndSettle();
 
+    expect(find.text('Site home'), findsOneWidget);
+    expect(find.text('Private files'), findsOneWidget);
+    expect(find.text('Participants'), findsOneWidget);
+    expect(find.text('Badges'), findsOneWidget);
+
     // Navigate to My Courses in drawer
     await tester.tap(find.text('My courses'));
     await tester.pumpAndSettle();
 
     // Verify Courses page contains title
     expect(find.text('This is the courses overview page.'), findsOneWidget);
+  });
+
+  testWidgets('Top app bar account menu renders actions',
+      (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    await tester.pumpWidget(const MoodleApp());
+    await tester.tap(find.byTooltip('Account menu'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Profile'), findsOneWidget);
+    expect(find.text('Preferences'), findsOneWidget);
+    expect(find.text('Log out'), findsOneWidget);
   });
 
   testWidgets('Dashboard renders correctly on a mobile viewport',

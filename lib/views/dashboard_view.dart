@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moodle/widgets/nav_drawer.dart';
+import 'package:moodle/widgets/top_app_bar.dart';
 import 'package:moodle/constants.dart';
 
 class DashboardView extends StatelessWidget {
@@ -101,34 +102,7 @@ class DashboardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: moodleWhite,
-        foregroundColor: moodleTextDark,
-        elevation: 1,
-        titleSpacing: 0,
-        title: Row(
-          children: [
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              width: 32,
-              height: 32,
-              child: Image.asset(
-                'images/moodle_logo.png',
-                fit: BoxFit.contain,
-              ),
-            ),
-            const Flexible(
-              child: Text(
-                'Dashboard',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
-            ),
-          ],
-        ),
-        actions: _buildAppBarActions(context),
-      ),
+      appBar: const MoodleTopAppBar(title: 'Dashboard'),
       drawer: const NavDrawer(),
       body: Container(
         color: moodleBg,
@@ -184,40 +158,6 @@ class DashboardView extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  List<Widget> _buildAppBarActions(BuildContext context) {
-    final bool compact = MediaQuery.of(context).size.width < 390;
-    return [
-      IconButton(
-        tooltip: 'Search',
-        icon: const Icon(Icons.search_outlined),
-        onPressed: () {},
-      ),
-      IconButton(
-        tooltip: 'Notifications',
-        icon: const Icon(Icons.notifications_none_outlined),
-        onPressed: () {},
-      ),
-      if (!compact)
-        IconButton(
-          tooltip: 'Messages',
-          icon: const Icon(Icons.chat_bubble_outline),
-          onPressed: () {},
-        ),
-      const Padding(
-        padding: EdgeInsets.only(left: 4, right: 12),
-        child: CircleAvatar(
-          radius: 18,
-          backgroundColor: moodleGrayBg,
-          foregroundColor: moodlePurple,
-          child: Text(
-            'OM',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-          ),
-        ),
-      ),
-    ];
   }
 }
 
