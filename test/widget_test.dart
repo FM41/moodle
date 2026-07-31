@@ -32,8 +32,12 @@ void main() {
     await tester.tap(find.text('My courses'));
     await tester.pumpAndSettle();
 
-    // Verify Courses page contains title
-    expect(find.text('This is the courses overview page.'), findsOneWidget);
+    // Verify Courses page contains module cards.
+    expect(find.text('Programming Language'), findsWidgets);
+    expect(find.text('Web Development'), findsWidgets);
+    expect(find.text('Database Systems'), findsWidgets);
+    expect(find.text('User Experience Design'), findsOneWidget);
+    expect(find.text('Upcoming course work'), findsOneWidget);
   });
 
   testWidgets('Top app bar account menu opens profile',
