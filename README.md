@@ -55,9 +55,13 @@ Main files:
 
 Main file: `lib/views/profile_view.dart`
 
-### Dummy Courses Page
+### Dynamic Courses Overview Page
 
-- Static modules overview page.
+- Modules overview page populated from a local data model and service.
+- Search box filters by module code, title, tutor, category, and next task.
+- Status chips filter courses by All, In progress, Due soon, and On track.
+- Category dropdown filters courses by Computing, Web, Data, and Design.
+- Reset button clears the search and filters.
 - Displays module cards for:
   - Programming Language
   - Web Development
@@ -71,8 +75,13 @@ Main file: `lib/views/profile_view.dart`
   - Status
   - Next task
 - Includes an upcoming coursework section.
+- Upcoming coursework updates to match the filtered course results.
 
-Main file: `lib/views/courses_view.dart`
+Main files:
+
+- `lib/models/course_module.dart`
+- `lib/services/course_service.dart`
+- `lib/views/courses_view.dart`
 
 ### Dummy Course Details Page
 
@@ -164,6 +173,10 @@ The app currently defines these routes in `lib/main.dart`:
 lib/
   constants.dart
   main.dart
+  models/
+    course_module.dart
+  services/
+    course_service.dart
   views/
     assessments_view.dart
     calendar_view.dart

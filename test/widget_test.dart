@@ -201,9 +201,9 @@ void main() {
 
     await _openDrawerItem(tester, 'Site home');
     expect(
-        find.text(
-            'Landing page for Moodle site-wide links and notices.'),
-        findsOneWidget);
+      find.text('Static landing page for Moodle site-wide links and notices.'),
+      findsOneWidget,
+    );
 
     await _openDrawerItem(tester, 'Private files');
     expect(find.text('coursework-draft.pdf'), findsOneWidget);
@@ -236,8 +236,7 @@ void main() {
     await tester.tap(find.byTooltip('Search'));
     await tester.pumpAndSettle();
     expect(
-        find.text(
-            'Search page showing example results across Moodle content.'),
+        find.text('Search page showing example results across Moodle content.'),
         findsOneWidget);
 
     await tester.tap(find.byTooltip('Notifications'));
@@ -264,6 +263,45 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('module-WEB204')));
     await tester.pumpAndSettle();
     expect(find.text('JavaScript workshop materials'), findsOneWidget);
+  });
+
+  testWidgets('Courses page search and filters update results',
+      (WidgetTester tester) async {
+    await _setDesktopViewport(tester);
+
+    await tester.pumpWidget(const MoodleApp());
+    await _openDrawerItem(tester, 'My courses');
+
+    await tester.enterText(
+      find.byKey(const ValueKey('course-search-field')),
+      'database',
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Database Systems'), findsWidgets);
+    expect(find.text('Programming Language'), findsNothing);
+    expect(find.text('1 courses shown'), findsOneWidget);
+
+    await tester.tap(find.byTooltip('Reset course filters'));
+    await tester.pumpAndSettle();
+    expect(find.text('4 courses shown'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(ChoiceChip, 'Due soon'));
+    await tester.pumpAndSettle();
+    expect(find.text('Web Development'), findsWidgets);
+    expect(find.text('Database Systems'), findsNothing);
+    expect(find.text('1 courses shown'), findsOneWidget);
+
+    await tester.tap(find.byTooltip('Reset course filters'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('course-category-filter')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Design').last);
+    await tester.pumpAndSettle();
+
+    expect(find.text('User Experience Design'), findsOneWidget);
+    expect(find.text('Web Development'), findsNothing);
+    expect(find.text('1 courses shown'), findsOneWidget);
   });
 
   testWidgets('Dashboard renders correctly on a mobile viewport',

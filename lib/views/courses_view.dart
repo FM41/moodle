@@ -1,78 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:moodle/constants.dart';
+import 'package:moodle/models/course_module.dart';
+import 'package:moodle/services/course_service.dart';
 import 'package:moodle/widgets/nav_drawer.dart';
 import 'package:moodle/widgets/top_app_bar.dart';
 
-class CoursesView extends StatelessWidget {
+class CoursesView extends StatefulWidget {
   const CoursesView({Key? key}) : super(key: key);
 
-  static const List<_Module> _modules = [
-    _Module(
-      code: 'COMP101',
-      title: 'Programming Language',
-      tutor: 'Dr Jiacheng Tan',
-      progress: 0.78,
-      nextTask: 'Workshop 7 quiz',
-      status: 'In progress',
-      color: moodleBlue,
-      icon: Icons.code_outlined,
-      route: '/courses/programming-language',
-    ),
-    _Module(
-      code: 'WEB204',
-      title: 'Web Development',
-      tutor: 'Ms R. Patel',
-      progress: 0.64,
-      nextTask: 'Responsive layout task',
-      status: 'Due soon',
-      color: Color(0xFFD97706),
-      icon: Icons.web_outlined,
-      route: '/courses/web-development',
-    ),
-    _Module(
-      code: 'DBS112',
-      title: 'Database Systems',
-      tutor: 'Mr K. Ahmed',
-      progress: 0.52,
-      nextTask: 'ERD submission',
-      status: 'In progress',
-      color: Color(0xFF16845B),
-      icon: Icons.storage_outlined,
-      route: '/courses/database-systems',
-    ),
-    _Module(
-      code: 'UXD130',
-      title: 'User Experience Design',
-      tutor: 'Dr L. Green',
-      progress: 0.86,
-      nextTask: 'Prototype reflection',
-      status: 'On track',
-      color: Color(0xFFB4236A),
-      icon: Icons.design_services_outlined,
-      route: '/courses/user-experience-design',
-    ),
+  @override
+  State<CoursesView> createState() => _CoursesViewState();
+}
+
+class _CoursesViewState extends State<CoursesView> {
+  static const CourseService _courseService = CourseService();
+  static const List<String> _statuses = [
+    'All',
+    'In progress',
+    'Due soon',
+    'On track',
+  ];
+  static const List<String> _categories = [
+    'All',
+    'Computing',
+    'Web',
+    'Data',
+    'Design',
   ];
 
-  static const List<_UpcomingTask> _upcomingTasks = [
-    _UpcomingTask(
-      title: 'Responsive layout task',
-      module: 'Web Development',
-      due: 'Today, 16:00',
-    ),
-    _UpcomingTask(
-      title: 'Workshop 7 quiz',
-      module: 'Programming Language',
-      due: 'Friday, 11:30',
-    ),
-    _UpcomingTask(
-      title: 'ERD submission',
-      module: 'Database Systems',
-      due: 'Monday, 09:00',
-    ),
-  ];
+  final TextEditingController _searchController = TextEditingController();
+  String _query = '';
+  String _selectedStatus = 'All';
+  String _selectedCategory = 'All';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final List<CourseModule> modules = _courseService.filterModules(
+      query: _query,
+      status: _selectedStatus,
+      category: _selectedCategory,
+    );
+    final List<UpcomingCourseTask> tasks =
+        _courseService.tasksForModules(modules);
+
     return Scaffold(
       appBar: const MoodleTopAppBar(title: 'My courses'),
       drawer: const NavDrawer(),
@@ -106,18 +82,46 @@ class CoursesView extends StatelessWidget {
                         ),
                         const SizedBox(height: 6),
                         const Text(
-                          'This is the courses overview page.',
+                          'Search and filter your modules from the local course data service.',
                           style: TextStyle(
                             fontSize: 14,
                             color: moodleTextMuted,
                           ),
                         ),
                         const SizedBox(height: 18),
-                        _ModuleGrid(modules: _modules, isWide: isWide),
+                        _CourseFilters(
+                          controller: _searchController,
+                          statuses: _statuses,
+                          categories: _categories,
+                          selectedStatus: _selectedStatus,
+                          selectedCategory: _selectedCategory,
+                          resultCount: modules.length,
+                          onSearchChanged: (value) {
+                            setState(() {
+                              _query = value;
+                            });
+                          },
+                          onStatusChanged: (value) {
+                            setState(() {
+                              _selectedStatus = value;
+                            });
+                          },
+                          onCategoryChanged: (value) {
+                            setState(() {
+                              _selectedCategory = value;
+                            });
+                          },
+                          onReset: _resetFilters,
+                        ),
+                        const SizedBox(height: 18),
+                        if (modules.isEmpty)
+                          const _EmptyCourses()
+                        else
+                          _ModuleGrid(modules: modules, isWide: isWide),
                         const SizedBox(height: 22),
                         const _SectionTitle(title: 'Upcoming course work'),
                         const SizedBox(height: 10),
-                        const _UpcomingTaskList(tasks: _upcomingTasks),
+                        _UpcomingTaskList(tasks: tasks),
                       ],
                     ),
                   ),
@@ -125,6 +129,155 @@ class CoursesView extends StatelessWidget {
               );
             },
           ),
+        ),
+      ),
+    );
+  }
+
+  void _resetFilters() {
+    setState(() {
+      _query = '';
+      _selectedStatus = 'All';
+      _selectedCategory = 'All';
+      _searchController.clear();
+    });
+  }
+}
+
+class _CourseFilters extends StatelessWidget {
+  const _CourseFilters({
+    required this.controller,
+    required this.statuses,
+    required this.categories,
+    required this.selectedStatus,
+    required this.selectedCategory,
+    required this.resultCount,
+    required this.onSearchChanged,
+    required this.onStatusChanged,
+    required this.onCategoryChanged,
+    required this.onReset,
+  });
+
+  final TextEditingController controller;
+  final List<String> statuses;
+  final List<String> categories;
+  final String selectedStatus;
+  final String selectedCategory;
+  final int resultCount;
+  final ValueChanged<String> onSearchChanged;
+  final ValueChanged<String> onStatusChanged;
+  final ValueChanged<String> onCategoryChanged;
+  final VoidCallback onReset;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: moodleWhite,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        side: const BorderSide(color: moodleBorder),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextField(
+              key: const ValueKey('course-search-field'),
+              controller: controller,
+              onChanged: onSearchChanged,
+              decoration: const InputDecoration(
+                labelText: 'Search courses',
+                hintText: 'Try "web", "database", or "quiz"',
+                prefixIcon: Icon(Icons.search_outlined),
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 12),
+            const Text(
+              'Status',
+              style: TextStyle(
+                color: moodleTextDark,
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final status in statuses)
+                  ChoiceChip(
+                    label: Text(status),
+                    selected: selectedStatus == status,
+                    onSelected: (_) => onStatusChanged(status),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: DropdownButtonFormField<String>(
+                    key: const ValueKey('course-category-filter'),
+                    value: selectedCategory,
+                    decoration: const InputDecoration(
+                      labelText: 'Category',
+                      border: OutlineInputBorder(),
+                    ),
+                    items: [
+                      for (final category in categories)
+                        DropdownMenuItem(
+                          value: category,
+                          child: Text(category),
+                        ),
+                    ],
+                    onChanged: (value) {
+                      if (value != null) {
+                        onCategoryChanged(value);
+                      }
+                    },
+                  ),
+                ),
+                const SizedBox(width: 10),
+                IconButton(
+                  tooltip: 'Reset course filters',
+                  onPressed: onReset,
+                  icon: const Icon(Icons.refresh_outlined),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Text(
+              '$resultCount courses shown',
+              style: const TextStyle(color: moodleTextMuted, fontSize: 13),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _EmptyCourses extends StatelessWidget {
+  const _EmptyCourses();
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: moodleWhite,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        side: const BorderSide(color: moodleBorder),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: const Padding(
+        padding: EdgeInsets.all(18),
+        child: Text(
+          'No courses match your search and filters.',
+          style: TextStyle(color: moodleTextMuted, fontSize: 14),
         ),
       ),
     );
@@ -137,7 +290,7 @@ class _ModuleGrid extends StatelessWidget {
     required this.isWide,
   });
 
-  final List<_Module> modules;
+  final List<CourseModule> modules;
   final bool isWide;
 
   @override
@@ -164,7 +317,7 @@ class _ModuleGrid extends StatelessWidget {
         crossAxisCount: 2,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
-        mainAxisExtent: 210,
+        mainAxisExtent: 228,
       ),
       itemBuilder: (context, index) {
         return _ModuleCard(
@@ -182,7 +335,7 @@ class _ModuleCard extends StatelessWidget {
     required this.module,
   }) : super(key: key);
 
-  final _Module module;
+  final CourseModule module;
 
   @override
   Widget build(BuildContext context) {
@@ -197,9 +350,7 @@ class _ModuleCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: InkWell(
-        onTap: module.route == null
-            ? null
-            : () => Navigator.pushNamed(context, module.route!),
+        onTap: () => Navigator.pushNamed(context, module.route),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -249,6 +400,13 @@ class _ModuleCard extends StatelessWidget {
               const SizedBox(height: 12),
               Text(
                 module.tutor,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(color: moodleTextMuted, fontSize: 13),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                module.category,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(color: moodleTextMuted, fontSize: 13),
@@ -354,10 +512,28 @@ class _SectionTitle extends StatelessWidget {
 class _UpcomingTaskList extends StatelessWidget {
   const _UpcomingTaskList({required this.tasks});
 
-  final List<_UpcomingTask> tasks;
+  final List<UpcomingCourseTask> tasks;
 
   @override
   Widget build(BuildContext context) {
+    if (tasks.isEmpty) {
+      return Card(
+        color: moodleWhite,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(color: moodleBorder),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: const Padding(
+          padding: EdgeInsets.all(16),
+          child: Text(
+            'No upcoming course work for the current results.',
+            style: TextStyle(color: moodleTextMuted, fontSize: 14),
+          ),
+        ),
+      );
+    }
+
     return Card(
       color: moodleWhite,
       elevation: 0,
@@ -381,7 +557,7 @@ class _UpcomingTaskList extends StatelessWidget {
 class _UpcomingTaskRow extends StatelessWidget {
   const _UpcomingTaskRow({required this.task});
 
-  final _UpcomingTask task;
+  final UpcomingCourseTask task;
 
   @override
   Widget build(BuildContext context) {
@@ -438,40 +614,4 @@ class _UpcomingTaskRow extends StatelessWidget {
       ),
     );
   }
-}
-
-class _Module {
-  const _Module({
-    required this.code,
-    required this.title,
-    required this.tutor,
-    required this.progress,
-    required this.nextTask,
-    required this.status,
-    required this.color,
-    required this.icon,
-    this.route,
-  });
-
-  final String code;
-  final String title;
-  final String tutor;
-  final double progress;
-  final String nextTask;
-  final String status;
-  final Color color;
-  final IconData icon;
-  final String? route;
-}
-
-class _UpcomingTask {
-  const _UpcomingTask({
-    required this.title,
-    required this.module,
-    required this.due,
-  });
-
-  final String title;
-  final String module;
-  final String due;
 }
