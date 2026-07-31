@@ -17,6 +17,7 @@ class NavDrawer extends StatelessWidget {
     _DrawerEntry(
       title: 'Calendar',
       icon: Icons.calendar_month_outlined,
+      route: '/calendar',
     ),
     _DrawerEntry(
       title: 'Private files',
