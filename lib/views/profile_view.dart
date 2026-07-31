@@ -262,7 +262,7 @@ class _CourseAccessCard extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10),
-            _CourseChip(label: 'Programming Principles'),
+            _CourseChip(label: 'Programming Language'),
             SizedBox(height: 8),
             _CourseChip(label: 'Web Development'),
             SizedBox(height: 8),

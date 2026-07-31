@@ -36,7 +36,7 @@ class DashboardView extends StatelessWidget {
   static const List<_CourseProgress> _courses = [
     _CourseProgress(
       code: 'COMP101',
-      title: 'Programming Principles',
+      title: 'Programming Language',
       progress: 0.78,
       nextItem: 'Workshop 7 quiz',
       color: moodleBlue,
@@ -68,7 +68,7 @@ class DashboardView extends StatelessWidget {
       day: 'Fri',
       time: '11:30',
       title: 'Programming quiz',
-      course: 'Programming Principles',
+      course: 'Programming Language',
     ),
     _Deadline(
       day: 'Mon',
@@ -88,7 +88,7 @@ class DashboardView extends StatelessWidget {
     _Activity(
       icon: Icons.forum_outlined,
       title: 'Tutor replied to your forum post',
-      meta: 'Programming Principles - 1 hour ago',
+      meta: 'Programming Language - 1 hour ago',
       color: moodleBlue,
     ),
     _Activity(
