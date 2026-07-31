@@ -46,7 +46,7 @@ class MoodleTopAppBar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           tooltip: 'Search',
           icon: const Icon(Icons.search_outlined),
-          onPressed: () {},
+          onPressed: () => _openRoute(context, '/search'),
         ),
         IconButton(
           tooltip: 'Notifications',
@@ -55,13 +55,13 @@ class MoodleTopAppBar extends StatelessWidget implements PreferredSizeWidget {
             backgroundColor: Color(0xFFD97706),
             child: Icon(Icons.notifications_none_outlined),
           ),
-          onPressed: () {},
+          onPressed: () => _openRoute(context, '/notifications'),
         ),
         if (!compact)
           IconButton(
             tooltip: 'Messages',
             icon: const Icon(Icons.chat_bubble_outline),
-            onPressed: () {},
+            onPressed: () => _openRoute(context, '/messages'),
           ),
         Padding(
           padding: const EdgeInsets.only(left: 2, right: 8),
@@ -72,6 +72,8 @@ class MoodleTopAppBar extends StatelessWidget implements PreferredSizeWidget {
               if (value == 'profile' &&
                   ModalRoute.of(context)?.settings.name != '/profile') {
                 Navigator.pushReplacementNamed(context, '/profile');
+              } else if (value == 'preferences') {
+                Navigator.pushReplacementNamed(context, '/preferences');
               } else if (value == 'logout') {
                 Navigator.pushReplacementNamed(context, '/login');
               }
@@ -103,5 +105,12 @@ class MoodleTopAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ],
     );
+  }
+
+  void _openRoute(BuildContext context, String route) {
+    if (ModalRoute.of(context)?.settings.name == route) {
+      return;
+    }
+    Navigator.pushReplacementNamed(context, route);
   }
 }

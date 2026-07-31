@@ -32,8 +32,9 @@ Main file: `lib/views/dashboard_view.dart`
   - Profile
   - Help and support
   - Preferences
-- Working navigation for Dashboard, Calendar, My courses, Current course, Grades, and Profile.
-- Placeholder links remain for menu items that are not required to function yet.
+- Working navigation for every visible drawer item.
+- App bar search, notifications, messages, account preferences, profile, and log out controls navigate to routed pages.
+- Course cards and dashboard buttons navigate to the relevant pages.
 
 Main files:
 
@@ -126,7 +127,8 @@ Main file: `lib/views/calendar_view.dart`
   - Log in button
   - Lost password link
   - Cookies notice and footer text
-- Buttons and fields are visual only and do not perform authentication.
+- OpenID Connect and Log in buttons return to the Dashboard for demo navigation.
+- Fields are visual only and do not perform authentication.
 
 Main file: `lib/views/login_view.dart`
 
@@ -137,10 +139,22 @@ The app currently defines these routes in `lib/main.dart`:
 | Route | Page |
 | --- | --- |
 | `/` | Dashboard |
+| `/site-home` | Site home |
 | `/calendar` | Calendar |
+| `/private-files` | Private files |
 | `/courses` | My courses |
 | `/courses/programming-language` | Programming Language details |
+| `/courses/web-development` | Web Development details |
+| `/courses/database-systems` | Database Systems details |
+| `/courses/user-experience-design` | User Experience Design details |
 | `/assessments` | Assessments |
+| `/participants` | Participants |
+| `/badges` | Badges |
+| `/help` | Help and support |
+| `/preferences` | Preferences |
+| `/search` | Search |
+| `/notifications` | Notifications |
+| `/messages` | Messages |
 | `/profile` | Profile |
 | `/login` | Login |
 
@@ -158,6 +172,7 @@ lib/
     login_view.dart
     profile_view.dart
     programming_language_view.dart
+    static_info_view.dart
   widgets/
     nav_drawer.dart
     top_app_bar.dart
@@ -216,4 +231,4 @@ The current code has been verified with:
 - All page data is hardcoded for coursework demonstration purposes.
 - The app is designed mobile-first but also adapts to wider screens.
 - Moodle links are included as visible references where relevant.
-- Authentication, search, notifications, and placeholder drawer links are not connected to live services.
+- Authentication, search, notifications, and support pages use static demo content and are not connected to live services.

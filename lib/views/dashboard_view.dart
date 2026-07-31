@@ -139,6 +139,7 @@ class DashboardView extends StatelessWidget {
                         const _SectionTitle(
                           title: 'Course progress',
                           actionLabel: 'View all',
+                          actionRoute: '/courses',
                         ),
                         const SizedBox(height: 10),
                         const _CourseProgressList(courses: _courses),
@@ -300,10 +301,12 @@ class _SectionTitle extends StatelessWidget {
   const _SectionTitle({
     required this.title,
     this.actionLabel,
+    this.actionRoute,
   });
 
   final String title;
   final String? actionLabel;
+  final String? actionRoute;
 
   @override
   Widget build(BuildContext context) {
@@ -321,7 +324,9 @@ class _SectionTitle extends StatelessWidget {
         ),
         if (actionLabel != null)
           TextButton(
-            onPressed: () {},
+            onPressed: actionRoute == null
+                ? null
+                : () => Navigator.pushReplacementNamed(context, actionRoute!),
             child: Text(actionLabel!),
           ),
       ],

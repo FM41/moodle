@@ -2,16 +2,44 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:moodle/main.dart';
 
+Future<void> _setMobileViewport(WidgetTester tester) async {
+  tester.view.physicalSize = const Size(390, 844);
+  tester.view.devicePixelRatio = 1.0;
+  addTearDown(() {
+    tester.view.resetPhysicalSize();
+    tester.view.resetDevicePixelRatio();
+  });
+}
+
+Future<void> _setDesktopViewport(WidgetTester tester) async {
+  tester.view.physicalSize = const Size(1200, 800);
+  tester.view.devicePixelRatio = 1.0;
+  addTearDown(() {
+    tester.view.resetPhysicalSize();
+    tester.view.resetDevicePixelRatio();
+  });
+}
+
+Future<void> _openDrawerItem(WidgetTester tester, String label) async {
+  await tester.tap(find.byIcon(Icons.menu));
+  await tester.pumpAndSettle();
+  final item = find.widgetWithText(ListTile, label);
+  if (item.evaluate().isEmpty) {
+    await tester.scrollUntilVisible(
+      item,
+      100,
+      scrollable: find.byType(Scrollable).last,
+    );
+  }
+  await tester.tap(item);
+  await tester.pumpAndSettle();
+}
+
 void main() {
   testWidgets('App renders dashboard and courses screen correctly',
       (WidgetTester tester) async {
     // Set desktop screen size
-    tester.view.physicalSize = const Size(1200, 800);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(() {
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
+    await _setDesktopViewport(tester);
 
     // Build our app and trigger a frame.
     await tester.pumpWidget(const MoodleApp());
@@ -42,12 +70,7 @@ void main() {
 
   testWidgets('Top app bar account menu opens profile',
       (WidgetTester tester) async {
-    tester.view.physicalSize = const Size(390, 844);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(() {
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
+    await _setMobileViewport(tester);
 
     await tester.pumpWidget(const MoodleApp());
     await tester.tap(find.byTooltip('Account menu'));
@@ -68,12 +91,7 @@ void main() {
 
   testWidgets('Top app bar log out opens static login page',
       (WidgetTester tester) async {
-    tester.view.physicalSize = const Size(390, 844);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(() {
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
+    await _setMobileViewport(tester);
 
     await tester.pumpWidget(const MoodleApp());
     await tester.tap(find.byTooltip('Account menu'));
@@ -95,12 +113,7 @@ void main() {
 
   testWidgets('Side drawer profile menu opens basic information page',
       (WidgetTester tester) async {
-    tester.view.physicalSize = const Size(390, 844);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(() {
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
+    await _setMobileViewport(tester);
 
     await tester.pumpWidget(const MoodleApp());
     await tester.tap(find.byIcon(Icons.menu));
@@ -117,12 +130,7 @@ void main() {
 
   testWidgets('Programming Language module opens course details',
       (WidgetTester tester) async {
-    tester.view.physicalSize = const Size(390, 844);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(() {
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
+    await _setMobileViewport(tester);
 
     await tester.pumpWidget(const MoodleApp());
     await tester.tap(find.byIcon(Icons.menu));
@@ -146,12 +154,7 @@ void main() {
 
   testWidgets('Assessments drawer item opens assessment details',
       (WidgetTester tester) async {
-    tester.view.physicalSize = const Size(390, 844);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(() {
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
+    await _setMobileViewport(tester);
 
     await tester.pumpWidget(const MoodleApp());
     await tester.tap(find.byIcon(Icons.menu));
@@ -170,12 +173,7 @@ void main() {
 
   testWidgets('Calendar drawer item opens deadlines and tasks page',
       (WidgetTester tester) async {
-    tester.view.physicalSize = const Size(390, 844);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(() {
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
+    await _setMobileViewport(tester);
 
     await tester.pumpWidget(const MoodleApp());
     await tester.tap(find.byIcon(Icons.menu));
@@ -195,14 +193,82 @@ void main() {
     );
   });
 
+  testWidgets('Drawer navigation routes every menu item',
+      (WidgetTester tester) async {
+    await _setDesktopViewport(tester);
+
+    await tester.pumpWidget(const MoodleApp());
+
+    await _openDrawerItem(tester, 'Site home');
+    expect(
+        find.text(
+            'Landing page for Moodle site-wide links and notices.'),
+        findsOneWidget);
+
+    await _openDrawerItem(tester, 'Private files');
+    expect(find.text('coursework-draft.pdf'), findsOneWidget);
+
+    await _openDrawerItem(tester, 'Participants');
+    expect(find.text('Dr Jiacheng Tan - Module tutor'), findsOneWidget);
+
+    await _openDrawerItem(tester, 'Badges');
+    expect(find.text('Quiz participation badge'), findsOneWidget);
+
+    await _openDrawerItem(tester, 'Help and support');
+    expect(find.text('Visit student IT support'), findsOneWidget);
+
+    await _openDrawerItem(tester, 'Preferences');
+    expect(find.text('Email digest: daily'), findsOneWidget);
+
+    await _openDrawerItem(tester, 'Current course');
+    expect(find.text('Module sections'), findsOneWidget);
+
+    await _openDrawerItem(tester, 'Dashboard');
+    expect(find.text('Welcome back, Oluwaferanmi'), findsOneWidget);
+  });
+
+  testWidgets('App bar buttons and course cards navigate to pages',
+      (WidgetTester tester) async {
+    await _setDesktopViewport(tester);
+
+    await tester.pumpWidget(const MoodleApp());
+
+    await tester.tap(find.byTooltip('Search'));
+    await tester.pumpAndSettle();
+    expect(
+        find.text(
+            'Search page showing example results across Moodle content.'),
+        findsOneWidget);
+
+    await tester.tap(find.byTooltip('Notifications'));
+    await tester.pumpAndSettle();
+    expect(find.text('Notification page with example course alerts.'),
+        findsOneWidget);
+
+    await tester.tap(find.byTooltip('Messages'));
+    await tester.pumpAndSettle();
+    expect(find.text('Messages page with example Moodle conversations.'),
+        findsOneWidget);
+
+    await tester.tap(find.byTooltip('Account menu'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Preferences'));
+    await tester.pumpAndSettle();
+    expect(find.text('Editor preference: default'), findsOneWidget);
+
+    await _openDrawerItem(tester, 'Dashboard');
+    await tester.tap(find.text('View all'));
+    await tester.pumpAndSettle();
+    expect(find.text('User Experience Design'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('module-WEB204')));
+    await tester.pumpAndSettle();
+    expect(find.text('JavaScript workshop materials'), findsOneWidget);
+  });
+
   testWidgets('Dashboard renders correctly on a mobile viewport',
       (WidgetTester tester) async {
-    tester.view.physicalSize = const Size(390, 844);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(() {
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
+    await _setMobileViewport(tester);
 
     await tester.pumpWidget(const MoodleApp());
 

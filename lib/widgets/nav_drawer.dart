@@ -13,6 +13,7 @@ class NavDrawer extends StatelessWidget {
     _DrawerEntry(
       title: 'Site home',
       icon: Icons.home_outlined,
+      route: '/site-home',
     ),
     _DrawerEntry(
       title: 'Calendar',
@@ -22,6 +23,7 @@ class NavDrawer extends StatelessWidget {
     _DrawerEntry(
       title: 'Private files',
       icon: Icons.folder_outlined,
+      route: '/private-files',
     ),
     _DrawerEntry(
       title: 'My courses',
@@ -39,6 +41,7 @@ class NavDrawer extends StatelessWidget {
     _DrawerEntry(
       title: 'Participants',
       icon: Icons.groups_outlined,
+      route: '/participants',
     ),
     _DrawerEntry(
       title: 'Grades',
@@ -48,6 +51,7 @@ class NavDrawer extends StatelessWidget {
     _DrawerEntry(
       title: 'Badges',
       icon: Icons.workspace_premium_outlined,
+      route: '/badges',
     ),
   ];
 
@@ -60,10 +64,12 @@ class NavDrawer extends StatelessWidget {
     _DrawerEntry(
       title: 'Help and support',
       icon: Icons.help_outline,
+      route: '/help',
     ),
     _DrawerEntry(
       title: 'Preferences',
       icon: Icons.tune_outlined,
+      route: '/preferences',
     ),
   ];
 
@@ -89,14 +95,14 @@ class NavDrawer extends StatelessWidget {
             for (final entry in _courseMenu)
               _DrawerMenuItem(
                 entry: entry,
-                selected: false,
+                selected: entry.route == currentRoute,
               ),
             const Divider(height: 24, color: moodleBorder),
             const _DrawerSectionTitle(title: 'Account'),
             for (final entry in _supportMenu)
               _DrawerMenuItem(
                 entry: entry,
-                selected: false,
+                selected: entry.route == currentRoute,
               ),
           ],
         ),

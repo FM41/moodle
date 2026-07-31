@@ -101,7 +101,7 @@ class _LoginFormCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             FilledButton.icon(
-              onPressed: () {},
+              onPressed: () => Navigator.pushReplacementNamed(context, '/'),
               icon: const Icon(Icons.account_circle_outlined),
               label: const Text('OpenID Connect'),
               style: FilledButton.styleFrom(
@@ -143,7 +143,7 @@ class _LoginFormCard extends StatelessWidget {
             ),
             const SizedBox(height: 14),
             FilledButton(
-              onPressed: () {},
+              onPressed: () => Navigator.pushReplacementNamed(context, '/'),
               style: FilledButton.styleFrom(
                 backgroundColor: moodleBlue,
                 foregroundColor: moodleWhite,

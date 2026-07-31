@@ -27,6 +27,7 @@ class CoursesView extends StatelessWidget {
       status: 'Due soon',
       color: Color(0xFFD97706),
       icon: Icons.web_outlined,
+      route: '/courses/web-development',
     ),
     _Module(
       code: 'DBS112',
@@ -37,6 +38,7 @@ class CoursesView extends StatelessWidget {
       status: 'In progress',
       color: Color(0xFF16845B),
       icon: Icons.storage_outlined,
+      route: '/courses/database-systems',
     ),
     _Module(
       code: 'UXD130',
@@ -47,6 +49,7 @@ class CoursesView extends StatelessWidget {
       status: 'On track',
       color: Color(0xFFB4236A),
       icon: Icons.design_services_outlined,
+      route: '/courses/user-experience-design',
     ),
   ];
 
