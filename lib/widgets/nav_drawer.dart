@@ -50,6 +50,11 @@ class NavDrawer extends StatelessWidget {
 
   static const List<_DrawerEntry> _supportMenu = [
     _DrawerEntry(
+      title: 'Profile',
+      icon: Icons.person_outline,
+      route: '/profile',
+    ),
+    _DrawerEntry(
       title: 'Help and support',
       icon: Icons.help_outline,
     ),

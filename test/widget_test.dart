@@ -36,7 +36,7 @@ void main() {
     expect(find.text('This is the courses overview page.'), findsOneWidget);
   });
 
-  testWidgets('Top app bar account menu renders actions',
+  testWidgets('Top app bar account menu opens profile',
       (WidgetTester tester) async {
     tester.view.physicalSize = const Size(390, 844);
     tester.view.devicePixelRatio = 1.0;
@@ -52,6 +52,14 @@ void main() {
     expect(find.text('Profile'), findsOneWidget);
     expect(find.text('Preferences'), findsOneWidget);
     expect(find.text('Log out'), findsOneWidget);
+
+    await tester.tap(find.text('Profile'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Student information'), findsOneWidget);
+    expect(find.text('Oluwaferanmi Muraino'), findsWidgets);
+    expect(find.text('UP2248415'), findsWidgets);
+    expect(find.text('up2248415@myport.ac.uk'), findsWidgets);
   });
 
   testWidgets('Dashboard renders correctly on a mobile viewport',

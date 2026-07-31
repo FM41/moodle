@@ -68,6 +68,12 @@ class MoodleTopAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: PopupMenuButton<String>(
             tooltip: 'Account menu',
             offset: const Offset(0, 44),
+            onSelected: (value) {
+              if (value == 'profile' &&
+                  ModalRoute.of(context)?.settings.name != '/profile') {
+                Navigator.pushReplacementNamed(context, '/profile');
+              }
+            },
             icon: const CircleAvatar(
               radius: 18,
               backgroundColor: moodleGrayBg,
