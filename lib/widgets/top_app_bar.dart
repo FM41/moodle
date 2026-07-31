@@ -72,6 +72,8 @@ class MoodleTopAppBar extends StatelessWidget implements PreferredSizeWidget {
               if (value == 'profile' &&
                   ModalRoute.of(context)?.settings.name != '/profile') {
                 Navigator.pushReplacementNamed(context, '/profile');
+              } else if (value == 'logout') {
+                Navigator.pushReplacementNamed(context, '/login');
               }
             },
             icon: const CircleAvatar(

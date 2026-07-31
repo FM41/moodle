@@ -3,6 +3,7 @@ import 'package:moodle/views/assessments_view.dart';
 import 'package:moodle/views/calendar_view.dart';
 import 'package:moodle/views/dashboard_view.dart';
 import 'package:moodle/views/courses_view.dart';
+import 'package:moodle/views/login_view.dart';
 import 'package:moodle/views/profile_view.dart';
 import 'package:moodle/views/programming_language_view.dart';
 import 'package:moodle/constants.dart';
@@ -35,6 +36,7 @@ class MoodleApp extends StatelessWidget {
         '/courses/programming-language': (context) =>
             const ProgrammingLanguageView(),
         '/assessments': (context) => const AssessmentsView(),
+        '/login': (context) => const LoginView(),
         '/profile': (context) => const ProfileView(),
       },
       debugShowCheckedModeBanner: false,

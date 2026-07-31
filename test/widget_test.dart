@@ -66,6 +66,33 @@ void main() {
     expect(find.text('up2248415@myport.ac.uk'), findsWidgets);
   });
 
+  testWidgets('Top app bar log out opens static login page',
+      (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    await tester.pumpWidget(const MoodleApp());
+    await tester.tap(find.byTooltip('Account menu'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Log out'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Welcome to Moodle Cloud'), findsOneWidget);
+    expect(find.text('OpenID Connect'), findsOneWidget);
+    expect(find.text('Already have an account?'), findsOneWidget);
+    expect(find.text('Username or email'), findsOneWidget);
+    expect(find.text('Password'), findsOneWidget);
+    expect(find.text('Lost password?'), findsOneWidget);
+    expect(find.text('Login page link'), findsNothing);
+    expect(
+        find.text('https://moodle.port.ac.uk/login/index.php'), findsNothing);
+  });
+
   testWidgets('Side drawer profile menu opens basic information page',
       (WidgetTester tester) async {
     tester.view.physicalSize = const Size(390, 844);
