@@ -10,12 +10,13 @@ class CoursesView extends StatelessWidget {
     _Module(
       code: 'COMP101',
       title: 'Programming Language',
-      tutor: 'Dr A. Williams',
+      tutor: 'Dr Jiacheng Tan',
       progress: 0.78,
       nextTask: 'Workshop 7 quiz',
       status: 'In progress',
       color: moodleBlue,
       icon: Icons.code_outlined,
+      route: '/courses/programming-language',
     ),
     _Module(
       code: 'WEB204',
@@ -142,7 +143,10 @@ class _ModuleGrid extends StatelessWidget {
       return Column(
         children: [
           for (int i = 0; i < modules.length; i++) ...[
-            _ModuleCard(module: modules[i]),
+            _ModuleCard(
+              key: ValueKey('module-${modules[i].code}'),
+              module: modules[i],
+            ),
             if (i != modules.length - 1) const SizedBox(height: 10),
           ],
         ],
@@ -160,14 +164,20 @@ class _ModuleGrid extends StatelessWidget {
         mainAxisExtent: 210,
       ),
       itemBuilder: (context, index) {
-        return _ModuleCard(module: modules[index]);
+        return _ModuleCard(
+          key: ValueKey('module-${modules[index].code}'),
+          module: modules[index],
+        );
       },
     );
   }
 }
 
 class _ModuleCard extends StatelessWidget {
-  const _ModuleCard({required this.module});
+  const _ModuleCard({
+    Key? key,
+    required this.module,
+  }) : super(key: key);
 
   final _Module module;
 
@@ -178,107 +188,113 @@ class _ModuleCard extends StatelessWidget {
     return Card(
       color: moodleWhite,
       elevation: 0,
+      clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         side: const BorderSide(color: moodleBorder),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 46,
-                  height: 46,
-                  decoration: BoxDecoration(
-                    color: module.color.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(8),
+      child: InkWell(
+        onTap: module.route == null
+            ? null
+            : () => Navigator.pushNamed(context, module.route!),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 46,
+                    height: 46,
+                    decoration: BoxDecoration(
+                      color: module.color.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(module.icon, color: module.color, size: 24),
                   ),
-                  child: Icon(module.icon, color: module.color, size: 24),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        module.code,
-                        style: TextStyle(
-                          color: module.color,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          module.code,
+                          style: TextStyle(
+                            color: module.color,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 3),
-                      Text(
-                        module.title,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: moodleTextDark,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                        const SizedBox(height: 3),
+                        Text(
+                          module.title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: moodleTextDark,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Text(
-              module.tutor,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(color: moodleTextMuted, fontSize: 13),
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(999),
-                    child: LinearProgressIndicator(
-                      value: module.progress,
-                      minHeight: 8,
+                ],
+              ),
+              const SizedBox(height: 12),
+              Text(
+                module.tutor,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(color: moodleTextMuted, fontSize: 13),
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(999),
+                      child: LinearProgressIndicator(
+                        value: module.progress,
+                        minHeight: 8,
+                        color: module.color,
+                        backgroundColor: moodleGrayBg,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    '$percentage%',
+                    style: TextStyle(
                       color: module.color,
-                      backgroundColor: moodleGrayBg,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                Text(
-                  '$percentage%',
-                  style: TextStyle(
-                    color: module.color,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                _StatusPill(label: module.status, color: module.color),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    module.nextTask,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.right,
-                    style: const TextStyle(
-                      color: moodleTextMuted,
-                      fontSize: 13,
+                ],
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  _StatusPill(label: module.status, color: module.color),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      module.nextTask,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.right,
+                      style: const TextStyle(
+                        color: moodleTextMuted,
+                        fontSize: 13,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -431,6 +447,7 @@ class _Module {
     required this.status,
     required this.color,
     required this.icon,
+    this.route,
   });
 
   final String code;
@@ -441,6 +458,7 @@ class _Module {
   final String status;
   final Color color;
   final IconData icon;
+  final String? route;
 }
 
 class _UpcomingTask {

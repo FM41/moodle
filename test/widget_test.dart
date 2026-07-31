@@ -88,6 +88,35 @@ void main() {
     expect(find.text('Email address'), findsOneWidget);
   });
 
+  testWidgets('Programming Language module opens course details',
+      (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    await tester.pumpWidget(const MoodleApp());
+    await tester.tap(find.byIcon(Icons.menu));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('My courses'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const ValueKey('module-COMP101')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Module sections'), findsOneWidget);
+    expect(find.text('Announcements'), findsOneWidget);
+    expect(find.text('Learning materials'), findsOneWidget);
+    expect(find.text('Weekly practicals'), findsOneWidget);
+    expect(find.text('Assessments'), findsOneWidget);
+    expect(
+      find.text('https://moodle.port.ac.uk/course/view.php?id=2299'),
+      findsOneWidget,
+    );
+  });
+
   testWidgets('Dashboard renders correctly on a mobile viewport',
       (WidgetTester tester) async {
     tester.view.physicalSize = const Size(390, 844);

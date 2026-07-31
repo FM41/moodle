@@ -33,6 +33,7 @@ class NavDrawer extends StatelessWidget {
     _DrawerEntry(
       title: 'Current course',
       icon: Icons.menu_book_outlined,
+      route: '/courses/programming-language',
     ),
     _DrawerEntry(
       title: 'Participants',
