@@ -117,6 +117,30 @@ void main() {
     );
   });
 
+  testWidgets('Assessments drawer item opens assessment details',
+      (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    await tester.pumpWidget(const MoodleApp());
+    await tester.tap(find.byIcon(Icons.menu));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.widgetWithText(ListTile, 'Grades'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Assessment details'), findsOneWidget);
+    expect(find.text('Workshop 7 Quiz'), findsOneWidget);
+    expect(find.text('Responsive Layout Task'), findsOneWidget);
+    expect(find.text('Friday, 7 August 2026'), findsOneWidget);
+    expect(find.text('Not submitted'), findsOneWidget);
+    expect(find.text('Due soon'), findsWidgets);
+  });
+
   testWidgets('Dashboard renders correctly on a mobile viewport',
       (WidgetTester tester) async {
     tester.view.physicalSize = const Size(390, 844);

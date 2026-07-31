@@ -174,7 +174,7 @@ class _CourseHeaderCard extends StatelessWidget {
                 Expanded(
                   child: _CourseInfoTile(
                     label: 'Tutor',
-                    value: 'Dr A. Williams',
+                    value: 'Dr Jiacheng Tan',
                     icon: Icons.person_outline,
                   ),
                 ),

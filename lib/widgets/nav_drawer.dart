@@ -42,6 +42,7 @@ class NavDrawer extends StatelessWidget {
     _DrawerEntry(
       title: 'Grades',
       icon: Icons.grade_outlined,
+      route: '/assessments',
     ),
     _DrawerEntry(
       title: 'Badges',
