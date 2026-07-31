@@ -50,10 +50,10 @@ class MoodleTopAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         IconButton(
           tooltip: 'Notifications',
-          icon: Badge(
+          icon: const Badge(
             smallSize: 8,
-            backgroundColor: const Color(0xFFD97706),
-            child: const Icon(Icons.notifications_none_outlined),
+            backgroundColor: Color(0xFFD97706),
+            child: Icon(Icons.notifications_none_outlined),
           ),
           onPressed: () {},
         ),
