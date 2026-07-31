@@ -16,30 +16,35 @@ class NavDrawer extends StatelessWidget {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
+            DrawerHeader(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+              decoration: const BoxDecoration(
                 color: moodleDarkPurple,
               ),
-              child: Column(
+              child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   CircleAvatar(
-                    radius: 26,
+                    radius: 24,
                     backgroundColor: moodleWhite,
-                    child: Icon(Icons.person, size: 30, color: moodlePurple),
+                    child: Icon(Icons.person, size: 28, color: moodlePurple),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 8),
                   Text(
                     'Oluwaferanmi Muraino',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: moodleWhite,
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: 15,
                     ),
                   ),
                   Text(
                     'up2248415@myport.ac.uk',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Colors.white70,
                       fontSize: 12,
@@ -64,7 +69,8 @@ class NavDrawer extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.calendar_month_outlined, color: moodleWhite),
+              leading:
+                  const Icon(Icons.calendar_month_outlined, color: moodleWhite),
               title: const Text(
                 'Calendar',
                 style: TextStyle(color: moodleWhite, fontSize: 16),
@@ -73,7 +79,6 @@ class NavDrawer extends StatelessWidget {
                 // placeholder
               },
             ),
-
             ListTile(
               leading: const Icon(Icons.school_outlined, color: moodleWhite),
               title: const Text(

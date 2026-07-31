@@ -30,4 +30,21 @@ void main() {
     // Verify Courses page contains title
     expect(find.text('This is the courses overview page.'), findsOneWidget);
   });
+
+  testWidgets('Dashboard renders correctly on a mobile viewport',
+      (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    await tester.pumpWidget(const MoodleApp());
+
+    expect(find.text('Welcome back, Oluwaferanmi'), findsOneWidget);
+    expect(find.text('Course progress'), findsOneWidget);
+    expect(find.text('Upcoming deadlines'), findsOneWidget);
+    expect(find.text('Recent activity'), findsOneWidget);
+  });
 }
