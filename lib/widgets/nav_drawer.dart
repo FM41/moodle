@@ -16,12 +16,12 @@ class NavDrawer extends StatelessWidget {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-              decoration: const BoxDecoration(
+            const DrawerHeader(
+              padding: EdgeInsets.fromLTRB(16, 12, 16, 12),
+              decoration: BoxDecoration(
                 color: moodleDarkPurple,
               ),
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [

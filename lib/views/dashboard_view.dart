@@ -167,12 +167,12 @@ class DashboardView extends StatelessWidget {
                           actionLabel: 'View all',
                         ),
                         const SizedBox(height: 10),
-                        _CourseProgressList(courses: _courses),
+                        const _CourseProgressList(courses: _courses),
                         const SizedBox(height: 22),
                         _DashboardSplit(
                           isWide: isWide,
-                          left: _DeadlineList(deadlines: _deadlines),
-                          right: _ActivityList(activities: _activities),
+                          left: const _DeadlineList(deadlines: _deadlines),
+                          right: const _ActivityList(activities: _activities),
                         ),
                       ],
                     ),
@@ -242,7 +242,7 @@ class _WelcomePanel extends StatelessWidget {
               width: 46,
               height: 46,
               decoration: BoxDecoration(
-                color: moodlePurple.withOpacity(0.1),
+                color: moodlePurple.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Icon(Icons.dashboard_outlined, color: moodlePurple),
@@ -435,7 +435,7 @@ class _CourseProgressCard extends StatelessWidget {
                   height: 42,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: course.color.withOpacity(0.1),
+                    color: course.color.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -691,7 +691,7 @@ class _ActivityRow extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: activity.color.withOpacity(0.1),
+              color: activity.color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(activity.icon, color: activity.color, size: 22),
